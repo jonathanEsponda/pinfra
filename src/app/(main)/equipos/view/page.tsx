@@ -304,8 +304,8 @@ const EquiposView = () => {
 
       setEquipos(equiposEnriquecidos);
     } catch (error: unknown) {
-      let errorMessage = "Ocurrió un error desconocido";
-
+      const errorMessage = "Ocurrió un error desconocido";
+      console.error("Error al filtrar el equipo:", errorMessage);
       if (error instanceof Error) {
         console.error("Error al filtrar el equipo:", error.message);
       } else if (typeof error === "string") {
