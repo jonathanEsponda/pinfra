@@ -4,7 +4,7 @@ import { apiFetch } from "@/app/utils/apiFetch";
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { idEquipo: string } }
+  { params }: { params: { idEquipo: string | string[] } }
 ) {
   // Extraer el token de la sesión usando el helper de NextAuth
   const token = await getToken({ req });
@@ -16,8 +16,9 @@ export async function GET(
   }
 
   // Obtener el idEquipo de los parámetros
-  const { idEquipo } = params;
-
+  const idEquipo = Array.isArray(params.idEquipo)
+    ? params.idEquipo[0]
+    : params.idEquipo;
   // Hacer la llamada al backend incluyendo el token en el encabezado Authorization
   const res = await apiFetch(`${process.env.API_REST}/equipos/${idEquipo}`, {
     headers: {
