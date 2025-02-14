@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { EquipoCardProps } from "@/app/types";
+import Image from "next/image";
 
 const EquipoCard = ({ equipo }: EquipoCardProps) => {
   const [imagen, setImagen] = useState<string | null>(null);
@@ -38,7 +39,7 @@ const EquipoCard = ({ equipo }: EquipoCardProps) => {
     <div className="bg-slate-700 rounded-lg shadow-lg overflow-hidden">
       {imagen ? (
         <div className="h-48 w-full">
-          <img
+          <Image
             src={imagen}
             alt={equipo.nombre}
             className="object-cover w-full h-full"
