@@ -20,8 +20,8 @@ const UsuariosView = () => {
     reset,
   } = useForm<any>();
 
-  //Obtengo la fecha HOY para no perimitir que la fecha adquisición sea mayor
-  const today = new Date().toISOString().split("T")[0];
+  // //Obtengo la fecha HOY para no perimitir que la fecha adquisición sea mayor
+  // const today = new Date().toISOString().split("T")[0];
 
   const [usuarios, setUsuarios] = useState<UsuarioModelResponse[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -29,7 +29,8 @@ const UsuariosView = () => {
   const router = useRouter();
 
   const [perfiles, setPerfiles] = useState<PerfilModelResponse[]>([]);
-  const [insti, setInsti] = useState<InstitucionModelResponse[]>([]);
+  const [//insti
+    , setInsti] = useState<InstitucionModelResponse[]>([]);
 
   // Obtener perfiles desde la API
   useEffect(() => {

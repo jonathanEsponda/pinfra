@@ -1,7 +1,7 @@
 "use client";
 import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
-import { useRouter, useParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import {
   PerfilModelResponse,
   InstitucionModelResponse,
@@ -23,7 +23,8 @@ export default function EditPerfilPage() {
   const [perfiles, setPerfiles] = useState<PerfilModelResponse[]>([]);
   const [insti, setInsti] = useState<InstitucionModelResponse[]>([]);
   const [telefono, setTelefono] = useState<TelefonoModelResponse | null>(null);
-  const [telefonoEstado, setTelefonoEstado] =
+  const [//telefonoEstado, 
+    setTelefonoEstado] =
     useState<TelefonoModelResponse | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);

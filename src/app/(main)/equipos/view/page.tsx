@@ -25,13 +25,12 @@ const EquiposView = () => {
     control,
   } = useForm<any>();
 
-  //Obtengo la fecha HOY para no perimitir que la fecha adquisición sea mayor
-  const today = new Date().toISOString().split("T")[0];
+  // //Obtengo la fecha HOY para no perimitir que la fecha adquisición sea mayor
+  // const today = new Date().toISOString().split("T")[0];
 
   const [equipos, setEquipos] = useState<EquipoModelResponse[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
-  const router = useRouter();
 
   const [tiposEquipos, setTiposEquipo] = useState<TipoEquipoModelResponse[]>(
     []
@@ -298,9 +297,13 @@ const EquiposView = () => {
       );
 
       setEquipos(equiposEnriquecidos);
-    } catch (error: any) {
-      console.error("Error al filtrar equipos:", error.message);
-      setError(error.message);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error("Error al crear el equipo:", error.message);
+      } else {
+        console.error("Error al crear el equipo:", error);
+      }
+      setError(error);
     } finally {
       setLoading(false);
     }
