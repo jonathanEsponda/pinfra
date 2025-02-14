@@ -12,7 +12,6 @@ import {
   PaisModelResponse,
   ProveedorModelResponse,
   UbicacionModelResponse,
-  EquipoCardProps,
 } from "@/app/types";
 import omitBy from "lodash/omitBy";
 

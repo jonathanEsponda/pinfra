@@ -56,11 +56,14 @@ export default function EditEquipoPage() {
         }
         const equipoData: RegistroEquipoFormModel = await res.json();
 
+        const lifetime = "lifetime";
+        const duration = "duration";
+
         const garantiaFormData: GarantiaFormModel = {
           ...equipoData.garantia,
           tipo: equipoData.garantia.dePorVida
-            ? ("lifetime" as "lifetime")
-            : ("duration" as "duration"),
+            ? (lifetime as "lifetime")
+            : (duration as "duration"),
         };
 
         reset({
@@ -216,8 +219,12 @@ export default function EditEquipoPage() {
       }
 
       router.push("/equipos/view");
-    } catch (error: any) {
-      console.error("Error al actualizar el equipo:", error.message);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error("Error al borrar el equipo:", error.message);
+      } else {
+        console.error("Error al borrar el equipo:", error);
+      }
     }
   };
 

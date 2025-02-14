@@ -204,14 +204,18 @@ export default function NuevoEquipoPage() {
       };
 
       // Enviar la imagen a su API
-      const resImagen = await fetch("/api/imagenes", {
+      await fetch("/api/imagenes", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(imagenEquipo),
       });
       router.push("/dashboard");
-    } catch (error: any) {
-      console.error("Error al crear el equipo:", error.message);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error("Error al crear el equipo:", error.message);
+      } else {
+        console.error("Error al crear el equipo:", error);
+      }
     }
   };
 

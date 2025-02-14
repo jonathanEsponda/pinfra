@@ -9,7 +9,7 @@ import { BajaEquipoFormModel, BajaEquipoModel } from "@/app/types";
 export default function BajaEquipoFormPage() {
   const router = useRouter();
   const { idEquipo } = useParams();
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
 
   const {
     register,
@@ -71,8 +71,12 @@ export default function BajaEquipoFormPage() {
         throw new Error(errorResponse.message || "Error al enviar datos");
       }
       router.push("/equipos/view");
-    } catch (error: any) {
-      console.error("Error al enviar la baja del equipo:", error.message);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error("Error al borrar el equipo:", error.message);
+      } else {
+        console.error("Error al borrar el equipo:", error);
+      }
     }
   };
 
