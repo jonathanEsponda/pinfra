@@ -13,7 +13,7 @@ export async function POST(req: NextRequest) {
   }
 
   const body = await req.json();
-
+  console.log("body: ", body);
   try {
     const res = await apiFetch(
       `${process.env.API_REST}/usuarios/obtenerUsuariosFiltrando`,
@@ -31,7 +31,10 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(result);
   } catch (error) {
     return NextResponse.json(
-      { error: "Error en el servidor" },
+      {
+        error: "La respuesta del backend no es un JSON válido",
+        details: String(error),
+      },
       { status: 500 }
     );
   }

@@ -11,7 +11,7 @@ export async function POST(req: NextRequest) {
   }
   try {
     const body = await req.json();
-    const res = await fetch(`${process.env.API_REST}/imagenes`, {
+    await fetch(`${process.env.API_REST}/imagenes`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -23,7 +23,10 @@ export async function POST(req: NextRequest) {
     return NextResponse.json("registrando...");
   } catch (error) {
     return NextResponse.json(
-      { error: "Error en el servidor" },
+      {
+        error: "La respuesta del backend no es un JSON válido",
+        details: String(error),
+      },
       {
         status: 500,
       }

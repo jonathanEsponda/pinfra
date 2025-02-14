@@ -14,7 +14,7 @@ export async function PUT(req: NextRequest) {
 
   const body = await req.json();
 
-  const res = await apiFetch(`${process.env.API_REST}/usuarios`, {
+  await apiFetch(`${process.env.API_REST}/usuarios`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -28,7 +28,10 @@ export async function PUT(req: NextRequest) {
     return NextResponse.json("Modificando...");
   } catch (error) {
     return NextResponse.json(
-      { error: "La respuesta del backend no es un JSON válido" },
+      {
+        error: "La respuesta del backend no es un JSON válido",
+        details: String(error),
+      },
       { status: 500 }
     );
   }

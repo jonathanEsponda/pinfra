@@ -24,7 +24,10 @@ export async function GET(req: NextRequest) {
     return NextResponse.json(result);
   } catch (error) {
     return NextResponse.json(
-      { error: "La respuesta del backend no es un JSON válido" },
+      {
+        error: "La respuesta del backend no es un JSON válido",
+        details: String(error),
+      },
       { status: 500 }
     );
   }

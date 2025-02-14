@@ -112,7 +112,7 @@ export default function RegisterPage() {
   });
 
   return (
-    <div className="container mx-auto p-6 bg-slate-800 text-white rounded-lg shadow-lg">
+    <div className="mx-auto w-1/2 p-6 bg-slate-800 text-white rounded-lg shadow-lg">
       <form onSubmit={onSubmit} className="space-y-4">
         <h1 className="text-4xl font-bold mb-6 text-center">Registro</h1>
 
@@ -291,7 +291,7 @@ export default function RegisterPage() {
         >
           <option value="">Seleccione un perfil</option>
           {perfiles
-            .filter((perfil) => perfil.id >= "2") //No se muestra el perfil administrador
+            .filter((perfil) => perfil.id >= 2) //No se muestra el perfil administrador
             .map((perfil) => (
               <option key={perfil.id} value={perfil.id}>
                 {perfil.nombre}

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { EquipoModelResponse, EquipoCardProps } from "@/app/types";
+import { EquipoCardProps } from "@/app/types";
 
 const EquipoCard = ({ equipo }: EquipoCardProps) => {
   const [imagen, setImagen] = useState<string | null>(null);

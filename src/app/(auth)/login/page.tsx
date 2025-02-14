@@ -1,94 +1,83 @@
 "use client";
-import { useForm } from "react-hook-form";
+
+import React, { useState } from "react";
 import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { LoginFormData } from "@/app/types";
+import Link from "next/link";
 
-export default function LoginPage() {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<LoginFormData>();
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const router = useRouter();
+const LoginPage: React.FC = () => {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
-  const onSubmit = async (data: LoginFormData) => {
-    setErrorMessage(null);
-    // Se usa signIn con el provider "credentials" sin redirección automática
-    const res = await signIn("credentials", {
-      redirect: false,
-      username: data.username,
-      password: data.password,
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    await signIn("credentials", {
+      username,
+      password,
+      callbackUrl: "/dashboard",
     });
-
-    if (res?.error) {
-      setErrorMessage("Credenciales incorrectas o error en el login");
-    } else {
-      router.push("/dashboard");
-    }
   };
 
   return (
-    <div className="h-[calc(100vh-7rem)] grid justify-center items-center">
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="w-full max-w-md bg-slate-800 p-8 rounded-lg"
-      >
-        <h1 className="text-slate-200 font-bold text-4xl mb-4">Login</h1>
-        {errorMessage && (
-          <div className="bg-red-500 text-white p-3 rounded mb-4">
-            {errorMessage}
+    <div className="flex items-center justify-center bg-slate-100 p-4">
+      <div className="w-full max-w-lg bg-slate-800 rounded-xl shadow-lg p-8">
+        <h1 className="text-3xl font-bold text-center mb-6 text-white">
+          Iniciar Sesión
+        </h1>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Campo de nombre de usuario */}
+          <div>
+            <label htmlFor="username" className="block text-gray-200 mb-1">
+              Nombre de Usuario
+            </label>
+            <input
+              id="username"
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              className="w-full border border-gray-300 rounded-xl p-2 focus:outline-none focus:ring focus:border-blue-300"
+              required
+            />
           </div>
-        )}
-
-        <label htmlFor="username" className="text-slate-500 nb-2 block text-sm">
-          Nombre de usuario
-        </label>
-        <input
-          type="text"
-          {...register("username", {
-            required: "El nombre de usuario es obligatorio",
-          })}
-          className="p-3 rounded block mb-2 bg-slate-900 text-slate-300 w-full"
-        />
-        {errors.username && (
-          <span className="text-red-500 text-sm">
-            {errors.username.message}
-          </span>
-        )}
-
-        <label htmlFor="password" className="text-slate-500 nb-2 block text-sm">
-          Contraseña
-        </label>
-        <input
-          type="password"
-          {...register("password", {
-            required: "La contraseña es obligatoria",
-          })}
-          className="p-3 rounded block mb-2 bg-slate-900 text-slate-300 w-full"
-        />
-        {errors.password && (
-          <span className="text-red-500 text-sm">
-            {errors.password.message}
-          </span>
-        )}
-
-        <button
-          type="submit"
-          className="w-full bg-blue-500 text-white p-3 rounded-lg mt-2"
-        >
-          Iniciar sesión
-        </button>
-      </form>
-      <button
-        type="button"
-        onClick={() => signIn("google")}
-        className="w-full max-w-md bg-blue-400 text-white p-3 rounded-lg"
-      >
-        Iniciar sesión con Google
-      </button>
+          {/* Campo de contraseña */}
+          <div>
+            <label htmlFor="password" className="block text-gray-200 mb-1">
+              Contraseña
+            </label>
+            <input
+              id="password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full border border-gray-300 rounded-xl p-2 focus:outline-none focus:ring focus:border-blue-300"
+              required
+            />
+          </div>
+          {/* Botones de acción */}
+          <div className="flex flex-col gap-4 mt-6">
+            <button
+              type="submit"
+              className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-xl"
+            >
+              Iniciar Sesión
+            </button>
+            <button
+              type="button"
+              onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
+              className="w-full bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-xl"
+            >
+              Iniciar Sesión con Google
+            </button>
+            <Link
+              href="/registro"
+              className="w-full block text-center bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-xl"
+            >
+              Registrarse
+            </Link>
+          </div>
+        </form>
+      </div>
     </div>
   );
-}
+};
+
+export default LoginPage;

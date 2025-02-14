@@ -32,16 +32,16 @@ export async function GET(
     return NextResponse.json(result);
   } catch (error) {
     return NextResponse.json(
-      { error: "La respuesta del backend no es un JSON válido" },
+      {
+        error: "La respuesta del backend no es un JSON válido",
+        details: String(error),
+      },
       { status: 500 }
     );
   }
 }
 
-export async function PUT(
-  req: NextRequest,
-  context: { params: { idEquipo: string } }
-) {
+export async function PUT(req: NextRequest) {
   // Extraer el token de la sesión usando el helper de NextAuth
   const token = await getToken({ req });
   if (!token || !token.accessToken) {
@@ -53,7 +53,7 @@ export async function PUT(
 
   const body = await req.json();
 
-  const res = await apiFetch(`${process.env.API_REST}/equipos`, {
+  await apiFetch(`${process.env.API_REST}/equipos`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -67,7 +67,10 @@ export async function PUT(
     return NextResponse.json("Modificando...");
   } catch (error) {
     return NextResponse.json(
-      { error: "La respuesta del backend no es un JSON válido" },
+      {
+        error: "La respuesta del backend no es un JSON válido",
+        details: String(error),
+      },
       { status: 500 }
     );
   }

@@ -1,6 +1,6 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import type { NextAuthOptions } from "next-auth";
+import type { NextAuthOptions, Session } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 
 export const authOptions: NextAuthOptions = {
@@ -69,26 +69,36 @@ export const authOptions: NextAuthOptions = {
           id: Number(user.id),
           name: user.nombreUsuario,
           email: user.email,
+          nombre: "",
+          apellido: "",
+          idPerfil: user.idPerfil ?? 0,
         };
       }
-      if (account?.provider === "google") {
+      if (account?.provider === "google" && profile) {
         token.user = {
-          // información que NextAuth obtiene de Google.
-          id: Number(profile?.sub), //id único de Google
-          name: profile?.name,
-          email: profile?.email,
+          id: Number(profile?.sub),
+          name: profile?.name || "",
+          email: profile?.email || "",
+          nombre: profile?.name || "",
+          apellido: "",
+          idPerfil: 0, // Google no provee esta información
         };
       }
       return token;
     },
     async session({ session, token }) {
       session.accessToken = token.accessToken as string;
-      session.user = token.user as any;
+      session.user = token.user as Session["user"];
       session.user.idPerfil = token.idPerfil as number;
       return session;
     },
     async redirect({ url, baseUrl }) {
-      return `${baseUrl}/dashboard`;
+      if (url.startsWith("/")) {
+        return `${baseUrl}${url}`;
+      } else if (new URL(url).origin === baseUrl) {
+        return url;
+      }
+      return baseUrl;
     },
   },
   pages: {

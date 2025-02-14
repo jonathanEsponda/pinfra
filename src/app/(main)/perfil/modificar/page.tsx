@@ -23,8 +23,7 @@ export default function EditPerfilPage() {
   const [perfiles, setPerfiles] = useState<PerfilModelResponse[]>([]);
   const [insti, setInsti] = useState<InstitucionModelResponse[]>([]);
   const [telefono, setTelefono] = useState<TelefonoModelResponse | null>(null);
-  const [//telefonoEstado, 
-    setTelefonoEstado] =
+  const [telefonoEstado, setTelefonoEstado] =
     useState<TelefonoModelResponse | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -55,6 +54,14 @@ export default function EditPerfilPage() {
 
     fetchUsuario();
   }, [reset]);
+
+  useEffect(() => {
+    if (telefonoEstado?.telefono === "") {
+      setErrorMessage("El teléfono está bloqueado. No puedes modificarlo.");
+    } else {
+      setErrorMessage(null);
+    }
+  }, [telefonoEstado]);
 
   useEffect(() => {
     async function fetchTelefono() {

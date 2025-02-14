@@ -9,6 +9,7 @@ import {
   UsuarioModelResponse,
   InstitucionModelResponse,
   PerfilModelResponse,
+  UsuarioFiltroFormData,
 } from "@/app/types";
 
 const UsuariosView = () => {
@@ -18,7 +19,7 @@ const UsuariosView = () => {
     formState: { errors },
     control,
     reset,
-  } = useForm<any>();
+  } = useForm<UsuarioFiltroFormData>();
 
   // //Obtengo la fecha HOY para no perimitir que la fecha adquisición sea mayor
   // const today = new Date().toISOString().split("T")[0];
@@ -29,8 +30,11 @@ const UsuariosView = () => {
   const router = useRouter();
 
   const [perfiles, setPerfiles] = useState<PerfilModelResponse[]>([]);
-  const [//insti
-    , setInsti] = useState<InstitucionModelResponse[]>([]);
+  const [
+    ,
+    //insti
+    setInsti,
+  ] = useState<InstitucionModelResponse[]>([]);
 
   // Obtener perfiles desde la API
   useEffect(() => {
@@ -60,7 +64,7 @@ const UsuariosView = () => {
     fetchInstituciones();
   }, []);
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: UsuarioFiltroFormData) => {
     const filtrarUsuario: FiltroUsuarioModel = {
       id: data.id ? Number(data.id) : undefined,
       cedula: data.cedula,
@@ -71,10 +75,16 @@ const UsuariosView = () => {
       nombreUsuario: data.nombreUsuario,
       email: data.email,
       perfil: data.idPerfil
-        ? perfiles.find((p) => p.id === data.idPerfil)?.nombre
+        ? perfiles.find((p) => p.id === Number(data.idPerfil))?.nombre
         : undefined,
+
       estado: data.estado,
-      activo: data.activo,
+      activo:
+        data.activo === "true"
+          ? true
+          : data.activo === "false"
+          ? false
+          : undefined,
     };
 
     // Filtra el objeto usando omitBy, para no enviar a la api valores nulos o ""
@@ -141,9 +151,14 @@ const UsuariosView = () => {
       );
 
       setUsuarios(usuariosEnriquecidos);
-    } catch (error: any) {
-      console.error("Error al filtrar usuarios:", error.message);
-      setError(error.message);
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error("Error al filtrar usuarios:", error.message);
+        setError(error.message);
+      } else {
+        console.error("Error desconocido:", error);
+        setError("Error desconocido al filtrar usuarios.");
+      }
     } finally {
       setLoading(false);
     }
@@ -154,7 +169,6 @@ const UsuariosView = () => {
     id: number,
     e: React.MouseEvent<HTMLButtonElement>
   ) => {
-    // Evitar que el clic en el botón active el onClick del <tr>
     e.stopPropagation();
 
     const confirmation = window.confirm(
@@ -171,15 +185,22 @@ const UsuariosView = () => {
       });
 
       if (!res.ok) {
-        throw new Error("Error al eliminar el usuario");
+        throw new Error("Error al activar el usuario");
       }
-      // Actualiza la lista de usuarios filtrando el eliminado
+
       setUsuarios((prevUsuarios) =>
-        prevUsuarios.filter((usuario) => usuario.id !== id)
+        prevUsuarios.map((usuario) =>
+          usuario.id === id ? { ...usuario, activo: true } : usuario
+        )
       );
-    } catch (error: any) {
-      console.error(error);
-      setError(error.message || "No se pudo eliminar el usuario.");
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error(error.message);
+        setError(error.message);
+      } else {
+        console.error("Error desconocido:", error);
+        setError("No se pudo activar el usuario.");
+      }
     }
   };
 
@@ -188,7 +209,6 @@ const UsuariosView = () => {
     id: number,
     e: React.MouseEvent<HTMLButtonElement>
   ) => {
-    // Evitar que el clic en el botón active el onClick del <tr>
     e.stopPropagation();
 
     const confirmation = window.confirm(
@@ -207,13 +227,18 @@ const UsuariosView = () => {
       if (!res.ok) {
         throw new Error("Error al eliminar el usuario");
       }
-      // Actualiza la lista de usuarios filtrando el eliminado
+
       setUsuarios((prevUsuarios) =>
         prevUsuarios.filter((usuario) => usuario.id !== id)
       );
-    } catch (error: any) {
-      console.error(error);
-      setError(error.message || "No se pudo eliminar el usuario.");
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error(error.message);
+        setError(error.message);
+      } else {
+        console.error("Error desconocido:", error);
+        setError("No se pudo eliminar el usuario.");
+      }
     }
   };
 

@@ -2,7 +2,6 @@
 import { Controller, useForm } from "react-hook-form";
 import { EquipoModelResponse, FiltroEquipoModel } from "@/app/types";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import EquipoCard from "@/app/components/EquipoCard";
 
 import {
@@ -12,6 +11,7 @@ import {
   PaisModelResponse,
   ProveedorModelResponse,
   UbicacionModelResponse,
+  EquipoFiltroFormData,
 } from "@/app/types";
 import omitBy from "lodash/omitBy";
 
@@ -23,7 +23,7 @@ const EquiposView = () => {
     watch,
     reset,
     control,
-  } = useForm<any>();
+  } = useForm<EquipoFiltroFormData>();
 
   // //Obtengo la fecha HOY para no perimitir que la fecha adquisición sea mayor
   // const today = new Date().toISOString().split("T")[0];
@@ -132,7 +132,7 @@ const EquiposView = () => {
     }
   }, [selectedMarca]);
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: EquipoFiltroFormData) => {
     const filtrarEquipo: FiltroEquipoModel = {
       id: data.id ? Number(data.id) : undefined,
       nombre: data.nombre,
@@ -156,9 +156,15 @@ const EquiposView = () => {
       fechaAdquisicionDesde: data.fechaAdquisicionDesde,
       fechaAdquisicionHasta: data.fechaAdquisicionHasta,
       ubicacionActual: data.idUbicacionActual
-        ? ubicaciones.find((u) => u.id === data.idUbicacionActual)?.nombre
+        ? ubicaciones.find((u) => u.id === Number(data.idUbicacionActual))
+            ?.nombre
         : undefined,
-      activo: data.activo,
+      activo:
+        data.activo === "true"
+          ? true
+          : data.activo === "false"
+          ? false
+          : undefined,
     };
 
     // Filtra el objeto usando omitBy, para descartar valores nulos o ""
@@ -298,12 +304,17 @@ const EquiposView = () => {
 
       setEquipos(equiposEnriquecidos);
     } catch (error: unknown) {
+      let errorMessage = "Ocurrió un error desconocido";
+
       if (error instanceof Error) {
-        console.error("Error al crear el equipo:", error.message);
+        console.error("Error al filtrar el equipo:", error.message);
+        errorMessage = error.message;
+      } else if (typeof error === "string") {
+        console.error("Error al filtrar el equipo:", error);
+        errorMessage = error;
       } else {
-        console.error("Error al crear el equipo:", error);
+        console.error("Error al filtrar el equipo:", JSON.stringify(error));
       }
-      setError(error);
     } finally {
       setLoading(false);
     }

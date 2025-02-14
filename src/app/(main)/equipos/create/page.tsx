@@ -220,7 +220,7 @@ export default function NuevoEquipoPage() {
   };
 
   return (
-    <div className="container mx-auto p-6 bg-slate-800 text-white rounded-lg shadow-lg">
+    <div className="mx-auto w-1/2 p-6 bg-slate-800 text-white rounded-lg shadow-lg">
       <h1 className="text-4xl font-bold mb-6 text-center">Registrar Equipo</h1>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         {/* Nombre */}

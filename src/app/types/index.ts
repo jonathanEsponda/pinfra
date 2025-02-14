@@ -4,7 +4,7 @@ export interface perfilModel {
 }
 
 export interface PerfilModelResponse {
-  id: string;
+  id: number;
   nombre: string;
   activo: boolean;
   idFuncionalidades: number[];
@@ -101,6 +101,21 @@ export interface EquipoModelResponse {
   activo?: boolean;
 }
 
+export interface EquipoFiltroFormData {
+  id?: string;
+  nombre?: string;
+  idTipoEquipo?: string;
+  idMarca?: string;
+  idModelo?: string;
+  numSerie?: string;
+  idPaisOrigen?: string;
+  idProveedor?: string;
+  fechaAdquisicionDesde?: string;
+  fechaAdquisicionHasta?: string;
+  idUbicacionActual?: string;
+  activo?: string; // Puede ser "true", "false" o ""
+}
+
 export interface EquipoCardProps {
   equipo: EquipoModelResponse;
 }
@@ -190,6 +205,21 @@ export interface GarantiaFormModel extends GarantiaModel {
 // Marcas
 export interface MarcaModel {
   idModelo: number;
+}
+
+export interface UsuarioFiltroFormData {
+  id?: string;
+  cedula?: string;
+  primerNombre?: string;
+  segundoNombre?: string;
+  primerApellido?: string;
+  segundoApellido?: string;
+  nombreUsuario?: string;
+  email?: string;
+  idPerfil?: string;
+  idInstitucion?: string; // El ID de la institución es un string en el formulario
+  activo?: string; // Se usa "true", "false" o "" en los radio buttons
+  estado?: string;
 }
 
 // Registro de Usuario
