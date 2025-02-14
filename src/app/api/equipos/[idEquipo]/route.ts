@@ -3,8 +3,8 @@ import { getToken } from "next-auth/jwt";
 import { apiFetch } from "@/app/utils/apiFetch";
 
 export async function GET(
-  req: NextRequest,
-  { params }: { params: { idEquipo: string | string[] } }
+  context: { params: { idEquipo: string } },
+  req: NextRequest
 ) {
   // Extraer el token de la sesión usando el helper de NextAuth
   const token = await getToken({ req });
@@ -15,10 +15,9 @@ export async function GET(
     );
   }
 
-  // Obtener el idEquipo de los parámetros
-  const idEquipo = Array.isArray(params.idEquipo)
-    ? params.idEquipo[0]
-    : params.idEquipo;
+  // Obtener el id parametro de context
+  const { idEquipo } = await context.params;
+
   // Hacer la llamada al backend incluyendo el token en el encabezado Authorization
   const res = await apiFetch(`${process.env.API_REST}/equipos/${idEquipo}`, {
     headers: {
@@ -41,6 +40,7 @@ export async function GET(
     );
   }
 }
+
 export async function PUT(req: NextRequest) {
   // Extraer el token de la sesión usando el helper de NextAuth
   const token = await getToken({ req });
@@ -67,10 +67,7 @@ export async function PUT(req: NextRequest) {
     return NextResponse.json("Modificando...");
   } catch (error) {
     return NextResponse.json(
-      {
-        error: "La respuesta del backend no es un JSON válido",
-        details: String(error),
-      },
+      { error: "La respuesta del backend no es un JSON válido" },
       { status: 500 }
     );
   }
