@@ -308,7 +308,6 @@ const EquiposView = () => {
 
       if (error instanceof Error) {
         console.error("Error al filtrar el equipo:", error.message);
-        errorMessage = error.message;
       } else if (typeof error === "string") {
         console.error("Error al filtrar el equipo:", error);
       } else {
